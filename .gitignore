@@ -1,2 +1,7 @@
+**/*.log
+.DS_Store
+.idea
+lib
 node_modules
-.env
+public/output.css
+tmp

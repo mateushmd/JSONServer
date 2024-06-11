@@ -18,8 +18,6 @@ $(() =>
 
     let mode;
 
-    console.log(!discussionId)
-
     if (!discussionId)
         mode = Modes.CREATE;
     else
@@ -28,6 +26,8 @@ $(() =>
     let lockState = false;
 
     onLoadPage();
+
+    $(window).on('resize', resizeTextArea);
 
     $('form').on('submit', e =>
     {
@@ -38,12 +38,14 @@ $(() =>
     {
         didFillInFields();
 
-        if (mode === Modes.EDIT)
+        if (mode === Modes.EDIT)    
             checkSimilarityToOriginal();
     });
 
-    $('#body').on('input', () =>
+    $('#body').on('input', e =>
     {
+        resizeTextArea();
+
         didFillInFields();
 
         if (mode === Modes.EDIT)
@@ -100,19 +102,13 @@ $(() =>
         if (mode !== Modes.EDIT)
             return;
 
-        $('#create-discussion h1').text('Editar discussão');
-
         $('#submit span').text('Salvar');
 
         getSpecificDiscussion(discussionId, data =>
         {
             discussion = data[0];
 
-            if (discussion.authorId !== userId)
-            {
-                window.location.href = 'forum.html';
-                return;
-            }
+            console.log(discussion)
 
             $('#title').val(discussion.title);
             $('#body').val(discussion.text);
@@ -143,4 +139,13 @@ $(() =>
         $('#submit').prop('disabled', check);
     }
 
+
+    function resizeTextArea()
+    {
+        const bodyEl = $('#body');
+
+        bodyEl.height(96);
+
+        bodyEl.height(bodyEl.height() + (bodyEl.get(0).scrollHeight - 126));
+    }
 });
